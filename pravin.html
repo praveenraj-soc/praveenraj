@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Praveenraj M — SOC Analyst </title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#040711',
+                            800: '#0a101d',
+                            700: '#151d2a',
+                        },
+                        accent: {
+                            DEFAULT: '#10b981', // Emerald green
+                            cyan: '#06b6d4',
+                            blue: '#3b82f6',
+                            purple: '#a855f7'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(16, 185, 129, 0.2)' },
+                            '100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Cyber Grid Background Effect */
+        .cyber-grid {
+            background-size: 35px 35px;
+            background-image: 
+                linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        }
+        
+        /* Cyber Matrix Radar/Scanner Effect */
+        .radar-sweep {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.02) 50%, transparent 100%);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Glassmorphism Card Style with Click Ripple & Pulse Animations */
+        .cyber-card {
+            background: rgba(10, 16, 29, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(21, 29, 42, 0.9);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .cyber-card:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 12px 30px -5px rgba(16, 185, 129, 0.25);
+        }
+
+        /* Interactive Click Trigger Animation */
+        .cyber-card:active {
+            transform: scale(0.97);
+        }
+
+        /* Custom Ripple Effect Class */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Active Card Glow State */
+        .card-active {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4) !important;
+            animation: pulseCard 1s ease-in-out;
+        }
+
+        @keyframes pulseCard {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Terminal Window Header */
+        .terminal-header {
+            background: rgba(21, 29, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing text effect */
+        .text-glow {
+            text-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+        }
+
+        /* SOC Live Log Ticker */
+        .log-ticker {
+            font-family: monospace;
+            animation: slideUp 12s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 font-sans antialiased selection:bg-accent selection:text-dark-900 cyber-grid relative overflow-x-hidden">
+
+    <!-- Interactive Canvas Background -->
+    <canvas id="cyber-canvas" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none opacity-40"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-900/90 backdrop-blur-md border-b border-dark-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="#" class="font-mono text-base sm:text-lg font-bold text-accent flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-sm animate-pulse"></i>
+                <span> Praveenraj M </span>
+            </a>
+            
+            <!-- Desktop Navigation Links -->
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="hover:text-accent transition-colors">About</a>
+                <a href="#skills" class="hover:text-accent transition-colors">Skills & Tools</a>
+                <a href="#experience" class="hover:text-accent transition-colors">Experience</a>
+                <a href="#projects" class="hover:text-accent transition-colors">Projects</a>
+                <a href="#certifications" class="hover:text-accent transition-colors">Certifications</a>
+                <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="#contact" class="hidden sm:inline-block px-4 py-2 text-xs font-mono font-semibold uppercase tracking-wider bg-accent/10 border border-accent/60 text-accent rounded hover:bg-accent hover:text-dark-900 transition-all duration-300 shadow-sm hover:shadow-accent/50">
+                    Get in Touch
+                </a>
+                
+                <!-- Mobile Hamburger Button -->
+                <button id="mobile-menu-btn" aria-label="Toggle navigation menu" class="md:hidden text-gray-300 hover:text-accent focus:outline-none p-2 text-xl">
+                    <i class="fa-solid fa-bars" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-900/95 border-b border-dark-700 px-6 py-4 flex flex-col space-y-4 text-sm font-medium text-gray-300">
+            <a href="#about" class="mobile-link hover:text-accent transition-colors py-1">About</a>
+            <a href="#skills" class="mobile-link hover:text-accent transition-colors py-1">Skills & Tools</a>
+            <a href="#experience" class="mobile-link hover:text-accent transition-colors py-1">Experience</a>
+            <a href="#projects" class="mobile-link hover:text-accent transition-colors py-1">Projects</a>
+            <a href="#certifications" class="mobile-link hover:text-accent transition-colors py-1">Certifications</a>
+            <a href="#contact" class="mobile-link hover:text-accent transition-colors py-1">Contact</a>
+            <a href="#contact" class="mobile-link inline-block text-center px-4 py-2 text-xs font-mono font-semibold uppercase tracking-wider bg-accent/10 border border-accent/60 text-accent rounded hover:bg-accent hover:text-dark-900 transition-all duration-300">
+                Get in Touch
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="min-h-screen flex items-center justify-center pt-20 pb-12 px-4 sm:px-6 relative z-10 overflow-hidden">
+        <div class="radar-sweep"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            
+            <!-- Live SOC Status Indicator -->
+            <div class="inline-flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-1.5 mb-6 sm:mb-8 rounded-full bg-dark-800/90 border border-accent/40 text-xs font-mono text-accent shadow-lg shadow-accent/10 animate-float">
+                <span class="w-2.5 h-2.5 rounded-full bg-accent animate-ping"></span>
+                <span class="font-semibold tracking-wide">SOC ANALYST L1 </span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-4 text-white">
+                Praveenraj M
+            </h1>
+            
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent-cyan to-accent-blue mb-6 sm:mb-8 text-glow">
+                SOC ANALYST 
+            </h2>
+            
+            <p class="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2">
+                M.E in Cyber Security with hands-on experience in SIEM monitoring, log analysis, threat detection, and incident response using Splunk, Microsoft Sentinel, and CrowdStrike EDR.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full max-w-xs sm:max-w-none mx-auto">
+                <a href="#projects" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-accent text-dark-900 font-bold rounded hover:bg-emerald-400 transition-all duration-300 shadow-lg shadow-accent/20 hover:scale-105 text-center text-sm sm:text-base">
+                    <i class="fa-solid fa-shield-virus mr-2"></i> View SOC Case Studies
+                </a>
+                <a href="#contact" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-dark-800/80 border border-dark-700 hover:border-accent/60 rounded font-bold transition-all duration-300 hover:scale-105 text-center text-sm sm:text-base">
+                    <i class="fa-solid fa-headset mr-2"></i> Contact Me
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive SOC Terminal / Command Console Section -->
+    <section id="about" class="py-16 sm:py-20 bg-dark-800/40 border-y border-dark-700/60 relative z-10 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
+                <span class="text-accent font-mono text-lg sm:text-xl">&gt; 01.</span> SOC Analyst Profile
+            </h2>
+            
+            <!-- Terminal Box with Interactive Elements -->
+            <div class="cyber-card rounded-xl overflow-hidden shadow-2xl">
+                <div class="terminal-header px-4 py-3 flex items-center justify-between">
+                    <div class="flex space-x-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+                    </div>
+                    <span class="text-xs font-mono text-gray-400"> PROFILE </span>
+                    <span class="text-xs font-mono text-accent"><i class="fa-solid fa-signal mr-1"></i> ONLINE</span>
+                </div>
+                
+                <div class="p-4 sm:p-6 font-mono text-xs sm:text-sm space-y-4">
+                    <p class="text-gray-300 leading-relaxed">
+                        Cyber Security professional holding an <strong class="text-white">M.E. in Cyber Security</strong> and specialized <strong class="text-white">Next Generation SOC Analyst training from SIEM XPERT</strong> alongside <strong class="text-accent">TryHackMe SOC Level 1 Certification</strong>.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        Hands-on SOC Analyst training from SIEM XPERT. Experienced in SIEM monitoring, log analysis, threat detection, incident response, Splunk Enterprise, Microsoft Sentinel, CrowdStrike EDR, Wireshark, and Nessus. Seeking an SOC Analyst L1 role to contribute to proactive security monitoring and incident handling.
+                    </p>
+                    
+                    <div class="pt-4 border-t border-dark-700/60 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
+                        <div><span class="text-gray-500">DEGREE:</span> <span class="text-white">M.E. Cyber Security</span></div>
+                        <div><span class="text-gray-500">PRIMARY SIEM:</span> <span class="text-accent-cyan">Splunk, MS Sentinel</span></div>
+                        <div><span class="text-gray-500">EDR TOOL:</span> <span class="text-accent">CrowdStrike Falcon</span></div>
+                        <div><span class="text-gray-500">CERTIFICATIONS:</span> <span class="text-accent-cyan">*SOC Level L1, *Next-Gen SOC Analyst Training, *Security + Training</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Interactive Cards Section -->
+    <section id="skills" class="py-16 sm:py-20 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4 flex items-center gap-3">
+                <span class="text-accent font-mono text-lg sm:text-xl">&gt; 02.</span> Technical Stack & Cyber Arsenal
+            </h2>
+            <p class="text-gray-400 text-xs sm:text-sm mb-8 sm:mb-12 font-mono"><i class="fa-solid fa-hand-pointer text-accent mr-2"></i>(SKILLS)</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="cyber-card p-5 sm:p-6 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent text-xl sm:text-2xl mb-4 sm:mb-5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg mb-2 text-white flex items-center justify-between">
+                        SIEM & Log Monitoring
+                        <i class="fa-solid fa-bolt text-xs text-accent opacity-0 transition-opacity duration-300 card-icon"></i>
+                    </h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4">Querying logs, creating correlation searches, and triaging security telemetry.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-accent">Splunk Enterprise</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-accent-cyan">Microsoft Sentinel</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">Log Analysis</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">Alert Triage</span>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="cyber-card p-5 sm:p-6 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-accent-cyan/10 flex items-center justify-center text-accent-cyan text-xl sm:text-2xl mb-4 sm:mb-5">
+                        <i class="fa-solid fa-desktop"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg mb-2 text-white flex items-center justify-between">
+                        EDR & Endpoint Security
+                        <i class="fa-solid fa-bolt text-xs text-accent-cyan opacity-0 transition-opacity duration-300 card-icon"></i>
+                    </h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4">Endpoint isolation, process tree investigation, and telemetry correlation.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-accent">CrowdStrike EDR</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">Sysmon & Event Logs</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">IOC Analysis</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">Malware Triage</span>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="cyber-card p-5 sm:p-6 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-accent-blue/10 flex items-center justify-center text-accent-blue text-xl sm:text-2xl mb-4 sm:mb-5">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg mb-2 text-white flex items-center justify-between">
+                        Network Inspection
+                        <i class="fa-solid fa-bolt text-xs text-accent-blue opacity-0 transition-opacity duration-300 card-icon"></i>
+                    </h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4">Packet inspection, vulnerability scanning, and security modeling.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-accent-cyan">Wireshark</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-accent-cyan">Nessus Scanner</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">MITRE ATT&CK</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 text-xs font-mono rounded text-gray-300">Cyber Kill Chain</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Experience -->
+    <section id="experience" class="py-16 sm:py-20 bg-dark-800/40 border-y border-dark-700/60 relative z-10 backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-12 flex items-center gap-3">
+                <span class="text-accent font-mono text-lg sm:text-xl">&gt; 03.</span> Work Experience
+            </h2>
+            <div class="space-y-6 sm:space-y-8">
+                <!-- Exp 1 -->
+                <div class="cyber-card p-5 sm:p-6 md:p-8 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-user-shield text-accent text-sm sm:text-base"></i> Cyber Security Intern
+                            </h3>
+                            <span class="text-accent font-semibold text-xs sm:text-sm">Worldsec Technologies LLP</span>
+                        </div>
+                        <span class="font-mono text-xs px-3 py-1 bg-accent/10 border border-accent/30 text-accent rounded-full w-max">1 Year Internship</span>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-300 text-xs sm:text-sm space-y-2 leading-relaxed">
+                        <li>Monitored security events and analyzed logs using <span class="text-white font-medium">Splunk Enterprise SIEM</span>.</li>
+                        <li>Investigated security alerts, conducted IOC extraction, and performed rapid incident triage.</li>
+                        <li>Assisted in <span class="text-white font-medium">CrowdStrike EDR</span> investigations to identify and isolate endpoint security threats.</li>
+                        <li>Performed threat hunting using custom SIEM queries, Windows Event Logs, and Sysmon telemetry.</li>
+                        <li>Mapped adversary TTPs to the <span class="text-white font-medium">MITRE ATT&CK</span> framework for incident classification.</li>
+                    </ul>
+                </div>
+
+                <!-- Exp 2 -->
+                <div class="cyber-card p-5 sm:p-6 md:p-8 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">Business Executive</h3>
+                            <span class="text-accent-cyan font-semibold text-xs sm:text-sm">Shriram Finance Ltd</span>
+                        </div>
+                        <span class="font-mono text-xs px-3 py-1 bg-dark-900 border border-dark-700 text-gray-400 rounded-full w-max">1 Year 3 Months</span>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-300 text-xs sm:text-sm space-y-2 leading-relaxed">
+                        <li>Managed sensitive client records adhering strictly to data privacy and confidentiality policies.</li>
+                        <li>Minimized operational risks and errors through standardized operational compliance.</li>
+                        <li>Communicated actionable requirements effectively between clients and technical teams.</li>
+                    </ul>
+                </div>
+
+                <!-- Exp 3 -->
+                <div class="cyber-card p-5 sm:p-6 md:p-8 rounded-xl" onclick="triggerInteractiveAnimation(this)">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">Customer Executive</h3>
+                            <span class="text-gray-400 font-semibold text-xs sm:text-sm">Magus Customer's Dialogue</span>
+                        </div>
+                        <span class="font-mono text-xs px-3 py-1 bg-dark-900 border border-dark-700 text-gray-400 rounded-full w-max">1 Year</span>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-300 text-xs sm:text-sm space-y-2 leading-relaxed">
+                        <li>Handled high-volume customer queries and escalated issues under high-pressure scenarios.</li>
+                        <li>Maintained detailed records using ticketing and CRM tools to preserve data integrity.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects / Case Studies -->
+    <section id="projects" class="py-16 sm:py-20 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-12 flex items-center gap-3">
+                <span class="text-accent font-mono text-lg sm:text-xl">&gt; 04.</span> SOC Case Studies & Investigations
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Project 1 -->
+                <div class="cyber-card p-5 sm:p-6 md:p-8 rounded-xl flex flex-col justify-between" onclick="triggerInteractiveAnimation(this)">
+                    <div>
+                        <div class="text-accent text-2xl mb-4"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3">Phishing Email Triage & Header Analysis</h3>
+                        <p class="text-gray-400 text-xs sm:text-sm mb-6 leading-relaxed">
+                            Extracted and inspected raw email headers to identify spoofed senders, evaluated SPF/DKIM/DMARC authentication status, and analyzed embedded malicious URLs and attachments. Documented actionable recommendations to mitigate phishing risks.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-xs text-gray-300">
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-accent">Header Analysis</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-gray-300">URL Sandbox Triage</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-gray-300">Phishing Mitigation</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="cyber-card p-5 sm:p-6 md:p-8 rounded-xl flex flex-col justify-between" onclick="triggerInteractiveAnimation(this)">
+                    <div>
+                        <div class="text-accent-cyan text-2xl mb-4"><i class="fa-solid fa-key"></i></div>
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-3">Brute Force Attack Detection using Splunk</h3>
+                        <p class="text-gray-400 text-xs sm:text-sm mb-6 leading-relaxed">
+                            Configured SIEM correlation queries to monitor suspicious logon failures. Analyzed Windows Security Event IDs <strong class="text-white">4625</strong> (Failed Logon) and <strong class="text-white">4624</strong> (Successful Logon) to detect credential stuffing and brute-force patterns, culminating in complete incident reports.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 font-mono text-xs text-gray-300">
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-accent-cyan">Splunk SPL</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-gray-300">Event ID 4625 & 4624</span>
+                        <span class="px-2.5 py-1 bg-dark-900 border border-dark-700 rounded text-gray-300">IOC Extraction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education & Certifications -->
+    <section id="certifications" class="py-16 sm:py-20 bg-dark-800/40 border-y border-dark-700/60 relative z-10 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-12 flex items-center gap-3">
+                <span class="text-accent font-mono text-lg sm:text-xl">&gt; 05.</span> Education & Certifications
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
+                <div class="cyber-card p-5 sm:p-6 rounded-xl border-l-4 border-l-accent" onclick="triggerInteractiveAnimation(this)">
+                    <div class="text-accent font-mono text-xs mb-2">2019 - 2021 | CGPA: 8.9 / 10</div>
+                    <h4 class="font-bold text-base sm:text-lg text-white">M.E. Cyber Security</h4>
+                    <p class="text-xs sm:text-sm text-gray-400">Noorul Islam University</p>
+                </div>
+                <div class="cyber-card p-5 sm:p-6 rounded-xl border-l-4 border-l-accent-cyan" onclick="triggerInteractiveAnimation(this)">
+                    <div class="text-accent-cyan font-mono text-xs mb-2">2012 - 2016 | CGPA: 6.44 / 10</div>
+                    <h4 class="font-bold text-base sm:text-lg text-white">B.Tech Information Technology</h4>
+                    <p class="text-xs sm:text-sm text-gray-400">Bharath University</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg sm:text-xl font-bold mb-6 text-white flex items-center gap-2">
+                <i class="fa-solid fa-award text-accent"></i> Specialized Security Certifications & Training
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- TRYHACKME SOC LEVEL 1 CERTIFICATE CARD -->
+                <div class="cyber-card p-4 sm:p-5 rounded-xl flex items-center space-x-4 border-l-4 border-l-red-500" onclick="triggerInteractiveAnimation(this)">
+                    <div class="text-red-500 text-2xl sm:text-3xl"><i class="fa-solid fa-bug"></i></div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white">SOC Level 1</h4>
+                        <p class="text-[11px] sm:text-xs text-red-400 font-semibold">TryHackMe Certification</p>
+                    </div>
+                </div>
+
+                <!-- SIEM XPERT CARD -->
+                <div class="cyber-card p-4 sm:p-5 rounded-xl flex items-center space-x-4 border-l-4 border-l-accent" onclick="triggerInteractiveAnimation(this)">
+                    <div class="text-accent text-2xl sm:text-3xl"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white">Next Gen SOC Analyst</h4>
+                        <p class="text-[11px] sm:text-xs text-accent">SIEM XPERT Training</p>
+                    </div>
+                </div>
+
+                <!-- ACTE CARD -->
+                <div class="cyber-card p-4 sm:p-5 rounded-xl flex items-center space-x-4 border-l-4 border-l-accent-cyan" onclick="triggerInteractiveAnimation(this)">
+                    <div class="text-accent-cyan text-2xl sm:text-3xl"><i class="fa-solid fa-certificate"></i></div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-white">Security+ Training</h4>
+                        <p class="text-[11px] sm:text-xs text-accent-cyan">ACTE Technologies</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Footer -->
+    <footer id="contact" class="py-16 sm:py-20 bg-dark-900 border-t border-dark-700/80 text-center px-4 sm:px-6 relative z-10">
+        <div class="max-w-2xl mx-auto space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Get In Touch</h2>
+            <p class="text-gray-400 text-xs sm:text-sm">
+                I am actively seeking SOC Analyst L1 / Security Operations opportunities. Feel free to connect or reach out directly!
+            </p>
+            
+            <div class="cyber-card p-5 sm:p-6 rounded-xl font-mono text-xs sm:text-sm space-y-3 text-gray-300 inline-block text-left max-w-md w-full" onclick="triggerInteractiveAnimation(this)">
+                <div class="flex items-center gap-3"><i class="fa-solid fa-envelope text-accent w-5"></i> <a href="mailto:pravin07raj@gmail.com" class="hover:underline break-all">pravin07raj@gmail.com</a></div>
+                <div class="flex items-center gap-3"><i class="fa-solid fa-phone text-accent w-5"></i> <a href="tel:+918015864461" class="hover:underline">+91 8015864461</a></div>
+                <div class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-accent w-5"></i> Tiruvannamalai, Tamil Nadu</div>
+            </div>
+            
+            <div class="pt-8 text-xs font-mono text-gray-500">
+                Designed & Built Praveenraj M • Cyber Security & SOC Operations
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-xmark');
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
+
+        // Interactive Card Click Handler (Ripple & Pulse Animation)
+        function triggerInteractiveAnimation(element) {
+            element.classList.add('card-active');
+            
+            const icon = element.querySelector('.card-icon');
+            if (icon) icon.style.opacity = '1';
+
+            setTimeout(() => {
+                element.classList.remove('card-active');
+            }, 1000);
+
+            const rect = element.getBoundingClientRect();
+            createBurstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+
+        // Click Ripple Effect Listener for all cyber cards
+        document.addEventListener('click', function (e) {
+            const card = e.target.closest('.cyber-card');
+            if (!card) return;
+
+            const rect = card.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+            card.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // Interactive Canvas Background Animation
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const particleCount = Math.min(Math.floor(window.innerWidth / 18), 65);
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                radius: Math.random() * 2 + 1,
+                color: '#10b981'
+            });
+        }
+
+        // Particle Burst Effect on Click
+        function createBurstParticles(x, y) {
+            for (let i = 0; i < 12; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 3,
+                    radius: Math.random() * 3 + 1,
+                    color: '#06b6d4',
+                    life: 40
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${0.15 - dist / 130 * 0.15})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw particle nodes
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color || '#10b981';
+                ctx.fill();
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.life !== undefined) {
+                    p.life--;
+                    if (p.life <= 0) particles.splice(i, 1);
+                } else {
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                }
+            }
+
+            requestAnimationFrame(drawParticles);
+        }
+
+        drawParticles();
+    </script>
+</body>
+</html>
